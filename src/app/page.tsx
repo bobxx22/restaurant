@@ -1,69 +1,131 @@
-import Image from "next/image";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
+import { Hero } from "@/components/Hero";
+import { Menu } from "@/components/Menu";
+import { Promos } from "@/components/Promos";
+import { Selection } from "@/components/Selection";
+import { ClockIcon, PhoneIcon, PinIcon } from "@/components/icons";
+import { mapsEmbedUrl, mapsSearchUrl, phoneHref, site } from "@/data/site";
 
 export default function Home() {
+  const allItems = site.menu.flatMap((category) => category.items);
+  const [mainPhoto, ...sidePhotos] = site.about.images;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+    <>
+      <Header />
+
+      <main>
+        <Hero />
+        <Promos />
+        <Menu menu={site.menu} />
+
+        {/* Про нас */}
+        <section id="about" className="mx-auto mt-16 max-w-7xl px-4 sm:mt-24">
+          <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center lg:gap-14">
+            <div>
+              <h2 className="font-display text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+                {site.about.title}
+              </h2>
+              <p className="mt-4 text-lg leading-relaxed text-muted">{site.description}</p>
+              <dl className="mt-8 grid gap-5 sm:grid-cols-3 lg:grid-cols-1">
+                {site.about.features.map((feature) => (
+                  <div key={feature.title} className="border-l-2 border-accent pl-4">
+                    <dt className="font-bold">{feature.title}</dt>
+                    <dd className="mt-1 text-sm text-muted">{feature.text}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={mainPhoto}
+                alt={`Зала ресторану ${site.name}`}
+                loading="lazy"
+                className="col-span-2 aspect-[16/10] w-full rounded-3xl object-cover"
+              />
+              {sidePhotos.map((src) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img key={src} src={src} alt="" loading="lazy" className="aspect-[4/3] w-full rounded-3xl object-cover" />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Контакти */}
+        <section id="contacts" className="mx-auto mt-16 max-w-7xl px-4 sm:mt-24">
+          <div className="grid overflow-hidden rounded-3xl bg-surface ring-1 ring-line md:grid-cols-2">
+            <div className="p-6 sm:p-10">
+              <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">Як нас знайти</h2>
+
+              <div className="mt-8 grid gap-6">
+                <div className="flex gap-4">
+                  <PinIcon className="mt-0.5 size-6 shrink-0 text-accent" />
+                  <div>
+                    <h3 className="font-bold">Адреса</h3>
+                    <p className="text-muted">{site.address}</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <PhoneIcon className="mt-0.5 size-6 shrink-0 text-accent" />
+                  <div>
+                    <h3 className="font-bold">Телефон</h3>
+                    <a href={phoneHref} className="text-muted hover:text-foreground">
+                      {site.phone}
+                    </a>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <ClockIcon className="mt-0.5 size-6 shrink-0 text-accent" />
+                  <div className="flex-1">
+                    <h3 className="font-bold">Графік роботи</h3>
+                    <dl className="mt-1 max-w-xs">
+                      {site.hours.map((row) => (
+                        <div key={row.days} className="flex justify-between text-muted">
+                          <dt>{row.days}</dt>
+                          <dd className="tabular-nums">{row.time}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-10 grid gap-3 sm:flex">
+                <a
+                  href={phoneHref}
+                  className="flex items-center justify-center gap-2 rounded-2xl bg-accent px-6 py-4 font-bold text-white transition hover:bg-accent-dark"
+                >
+                  <PhoneIcon />
+                  Забронювати столик
+                </a>
+                <a
+                  href={mapsSearchUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-center gap-2 rounded-2xl px-6 py-4 font-semibold ring-1 ring-line transition hover:bg-background"
+                >
+                  <PinIcon />
+                  Прокласти маршрут
+                </a>
+              </div>
+            </div>
+
+            <iframe
+              src={mapsEmbedUrl}
+              title={`${site.name} на карті`}
+              className="h-80 w-full md:h-full md:min-h-[28rem]"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          </div>
+        </section>
       </main>
-    </div>
+
+      <Footer />
+      <Selection items={allItems} />
+    </>
   );
 }
